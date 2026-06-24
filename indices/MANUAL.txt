@@ -1,0 +1,22 @@
+UPGRADE BANCO DE DADOS:
+
+Verificar Instancia 
+Propriedades
+Avançado
+Limite de custo para paralelismo = 50 (para usar menos CPU)
+
+Após acessar pasta "Compactação BD":
+
+Primeiro rodar o script - Rebuild dos Indices
+Depois de rodar script copiar o campo "COMANDO SQL", abrir uma nova consulta e ir rodando de pouco em pouco
+Rodar mensalmente 
+Após conferir SELECT novamente, indices que não tem muitos dados continuam fragmentados
+
+Depois verificar as estatisticas com o seguinte SELECT - Update Statistics
+Comando para UPDATE é sp_updatestats
+Rodar semanalmente 
+
+Agora deve ser feita a compactação dos indices 
+Rodar no banco master a seguinte procedure - Procedimento que Compacta os Indices
+Depois deverá rodar o script - Script Compactação dos Indices (master)
+Rodar apenas 1 vez no banco depois nunca mais

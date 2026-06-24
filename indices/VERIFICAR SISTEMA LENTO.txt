@@ -1,0 +1,5 @@
+Logar no SQL server do servidor de produção, selecione o banco de dados “AUDITORIA_DBA” faz uma nova consulta e roda o seguinte comando:
+
+
+
+SP_WHOISACTIVE

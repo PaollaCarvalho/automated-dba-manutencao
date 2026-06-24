@@ -1,0 +1,129 @@
+SELECT
+CASE WHEN CLI_CODIGO = 0 THEN (SELECT MAX (CLI_CODIGO) + 1 FROM CLIENTES) ELSE CLI_CODIGO END AS IDPESCAD, -- =  // (O) Identificador do Cadastro de Pessoa
+CASE WHEN CLI_CODIGO = 0 THEN (SELECT MAX (CLI_CODIGO) + 1 FROM CLIENTES) ELSE CLI_CODIGO END AS CDAUXPESCAD, --(N) Código Auxiliar do Cadastro de Pessoa
+CASE WHEN (CLI_TIPO_PESSOA = 'Física' OR CLI_TIPO_PESSOA IS NULL) THEN 14 ELSE 15 END AS OPPESTIPO, --  // (O) Tipo de Pessoa
+LPAD ((COALESCE (CLI_CGC_CPF, 11111111111)), 11, 0) AS NRCPFCNPJ, --(O) Número do CPF ou CNPJ
+CLI_CLIENTE AS NMPESCAD,  --(O) Razão Social / Nome da Pessoa
+CLI_CLIENTE AS NMAPLFANT, --(O) Nome Usual / Nome Fantasia da Pessoa
+--DSPESOBS             --(N) Observação Cadastro de Pessoa
+LPAD ((COALESCE (CLI_DOCUMENTO, 11111111111)), 14, '') AS NRDOCUMENT, --(O) Número do documento de identificação para pessoas físicas e o número da inscrição estadual para pessoas j
+CASE WHEN (CLI_TIPO_PESSOA = 'Física' OR CLI_TIPO_PESSOA IS NULL) THEN 1 ELSE 8 END AS IDTPDOCTO, --(O) Tipo do Documento
+CASE WHEN (CLI_TIPO_PESSOA = 'Física' OR CLI_TIPO_PESSOA IS NULL) THEN 16 ELSE 18 END AS IDORGEXPED, --(O) Órgão Expedidor do Documento de Identificação
+41 AS IDESTCADOEX, --(O) UF do Órgão Expedidor do Documento de Identificação - 41 PARANA
+90 AS OPTIPLOGR, --(O) Logradouro da pessoa
+COALESCE (CLI_ENDERECO, 'SEM DADOS NA IMPORTACAO') AS NMLOGRAD, --(O) Endereço da Pessoa
+COALESCE (CLI_NUMERO, 'S/N') AS NRIMOVEL, --(O) Número do Endereço
+CLI_COMPLEMENTO AS NMENDCOMP, --(N) Complemento do Endereço
+COALESCE (CLI_CEP, 85929000) AS NRPESCEP, --(O) CEP
+--NRCXAPOST            --(N) Número da Caixa Postal
+CLI_EMAIL AS NMEMAIL, --(N) Endereço de e-mail
+--NMWEBSITE            --(N) Endereço do Web Site
+10 AS OPESTCIVIL, --(O) Estado Civil
+CASE WHEN CLI_BAIRRO = '' OR CLI_BAIRRO IS NULL THEN 'CENTRO' ELSE CLI_BAIRRO END AS NMBAIRCAD, --(O) Bairro
+4125753 AS IDMUNCAD, --(O) Identificador do Cadastro de Município - 4125753 - SAO PEDRO DO IGUACU
+--NRINSCMUN            --(N) Número da Inscrição Municipal
+CASE WHEN CLI_SEXO = 'F' THEN 8 ELSE 7 END AS OPPESTPSEX, --(O) Identificador do Sexo da Pessoa
+--DTCADASTRO           --(O) Data do Cadastro da Pessoa
+--IDUSUARIO            --(O) Código do Usuário que Cadastrou a Pessoa
+COALESCE (CLI_DATA_NASCIMENTO, '1899-12-31')AS DTNASCFUND, --(O) Data de Nascimento da Pessoa Física / Data de Fundação da Pessoa Jurídica
+--IDPESGRP             --(N) Identificador do cadastro de grupo de pessoas, utilizado para agrupar as pessoas que fazem parte de um gr
+CLI_FONE_CELULAR AS NRFONCEL, --(N) Número do telefone celular da pessoa
+CLI_FONE_COMERCIAL AS NRFONCOM, --(N) Número do telefone comercial
+CLI_FONE_RESIDENCIAL AS NRFONRES, --(N) Número do telefone residencial da pessoa
+--DSPRFPES             --(N) Profissão da pessoa - utilizado apenas para pessoa física
+--NRCRTTRA             --(N) Número da carteira de trabalho
+1 AS IDAPONAC, --(O) Identificador do cadastro de nacionalidades
+--DTALTERACAO          --(O) Data e hora da alteração do registro
+CASE WHEN CLI_TIPO_PESSOA <> 'Jurídica' THEN 718 ELSE 721 END AS OPTPOINE, --(O) Determina o tipo de inscrição estadual das pessoas do tipo jurídica
+CLI_MAE AS NMPESMAE, --(N) Nome da mãe quando a pessoa for física
+CLI_PAI AS NMPESPAI, --(N) Nome do pai quando a pessoa for física
+(SELECT FIRST 1 EMP_CODIGO FROM empresa) AS IDEMPCAD --(O) Identificador do cadastro de empresa que cadastrou a pessoa
+FROM CLIENTES
+
+UNION ALL
+
+SELECT
+FOR_CODIGO + 100000 AS IDPESCAD, -- =  // (O) Identificador do Cadastro de Pessoa
+FOR_CODIGO + 100000 AS CDAUXPESCAD, --  // (N) Código Auxiliar do Cadastro de Pessoa
+15 AS OPPESTIPO, --  // (O) Tipo de Pessoa
+LPAD ((COALESCE (FOR_CNPJ, 11111111111111)), 14, 0) AS NRCPFCNPJ, --(O) Número do CPF ou CNPJ
+FOR_FORNECEDOR AS NMPESCAD,  --  // (O) Razão Social / Nome da Pessoa
+FOR_FORNECEDOR AS NMAPLFANT, --  // (O) Nome Usual / Nome Fantasia da Pessoa
+--DSPESOBS             --  // (N) Observação Cadastro de Pessoa
+COALESCE (FOR_INSC, 11111111111) AS NRDOCUMENT, --  // (O) Número do documento de identificação para pessoas físicas e o número da inscrição estadual para pessoas j
+CASE WHEN FOR_TIPO_PESSOA = 'Jurídica' THEN 1 ELSE 8 END AS IDTPDOCTO, --  // (O) Tipo do Documento
+CASE WHEN FOR_TIPO_PESSOA = 'Jurídica' THEN 16 ELSE 18 END AS IDORGEXPED, --  // (O) Órgão Expedidor do Documento de Identificação
+41 AS IDESTCADOEX, --  // (O) UF do Órgão Expedidor do Documento de Identificação - 41 PARANA
+90 AS OPTIPLOGR, --  // (O) Logradouro da pessoa
+COALESCE (FOR_ENDERECO, 'SEM DADOS NA IMPORTACAO') AS NMLOGRAD, --  // (O) Endereço da Pessoa
+'S/N' AS NRIMOVEL, --  // (O) Número do Endereço
+FOR_COMPLEMENTO AS NMENDCOMP, --  // (N) Complemento do Endereço
+COALESCE (FOR_CEP, 85929000) AS NRPESCEP, --(O) CEP
+--NRCXAPOST            --  // (N) Número da Caixa Postal
+FOR_EMAIL AS NMEMAIL, --  // (N) Endereço de e-mail
+--NMWEBSITE            --  // (N) Endereço do Web Site
+10 AS OPESTCIVIL, --  // (O) Estado Civil
+CASE WHEN FOR_BAIRRO = '' OR FOR_BAIRRO IS NULL THEN 'CENTRO' ELSE FOR_BAIRRO END AS NMBAIRCAD, --  // (O) Bairro
+COALESCE(FOR_COD_CIDADE_NFE, 4125753) AS IDMUNCAD, --  // (O) Identificador do Cadastro de Município
+--NRINSCMUN            --  // (N) Número da Inscrição Municipal
+7 AS OPPESTPSEX, --  // (O) Identificador do Sexo da Pessoa
+--DTCADASTRO           --  // (O) Data do Cadastro da Pessoa
+--IDUSUARIO            --  // (O) Código do Usuário que Cadastrou a Pessoa
+COALESCE(FOR_DATA_CADASTRO,'1899-12-31') AS  DTNASCFUND, --  // (O) Data de Nascimento da Pessoa Física / Data de Fundação da Pessoa Jurídica
+--IDPESGRP             --  // (N) Identificador do cadastro de grupo de pessoas, utilizado para agrupar as pessoas que fazem parte de um gr
+FOR_FONE AS NRFONCEL, --  // (N) Número do telefone celular da pessoa
+FOR_FAX AS NRFONCOM, --  // (N) Número do telefone comercial
+FOR_FONE AS NRFONRES, --  // (N) Número do telefone residencial da pessoa
+--DSPRFPES             --  // (N) Profissão da pessoa - utilizado apenas para pessoa física
+--NRCRTTRA             --  // (N) Número da carteira de trabalho
+1 AS IDAPONAC, --  // (O) Identificador do cadastro de nacionalidades
+--DTALTERACAO          --  // (O) Data e hora da alteração do registro
+720 AS OPTPOINE, --  // (O) Determina o tipo de inscrição estadual das pessoas do tipo jurídica
+'' AS NMPESMAE, --  // (N) Nome da mãe quando a pessoa for física
+'' AS NMPESPAI, --  // (N) Nome do pai quando a pessoa for física
+(SELECT FIRST 1 EMP_CODIGO FROM empresa) AS IDEMPCAD --  // (O) Identificador do cadastro de empresa que cadastrou a pessoa
+FROM fornecedores 
+
+UNION ALL
+
+SELECT
+FAB_CODIGO + 300000 AS IDPESCAD, -- =  // (O) Identificador do Cadastro de Pessoa
+FAB_CODIGO + 300000 AS CDAUXPESCAD, --  // (N) Código Auxiliar do Cadastro de Pessoa
+15 AS OPPESTIPO, --  // (O) Tipo de Pessoa
+'11111111111111' AS NRCPFCNPJ, --  // (O) Número do CPF ou CNPJ
+FAB_FABRICANTE AS NMPESCAD,  --  // (O) Razão Social / Nome da Pessoa
+FAB_FABRICANTE AS NMAPLFANT, --  // (O) Nome Usual / Nome Fantasia da Pessoa
+--DSPESOBS             --  // (N) Observação Cadastro de Pessoa
+'11111111111' AS NRDOCUMENT, --  // (O) Número do documento de identificação para pessoas físicas e o número da inscrição estadual para pessoas j
+8 AS IDTPDOCTO, --  // (O) Tipo do Documento
+18 AS IDORGEXPED, --  // (O) Órgão Expedidor do Documento de Identificação
+41 AS IDESTCADOEX, --  // (O) UF do Órgão Expedidor do Documento de Identificação - 41 PARANA
+90 AS OPTIPLOGR, --  // (O) Logradouro da pessoa
+'SEM DADOS NA IMPORTACAO' AS NMLOGRAD, --  // (O) Endereço da Pessoa
+'S/N' AS NRIMOVEL, --  // (O) Número do Endereço
+'' AS NMENDCOMP, --  // (N) Complemento do Endereço
+85929000 AS NRPESCEP, --  // (O) CEP
+--NRCXAPOST            --  // (N) Número da Caixa Postal
+'' AS NMEMAIL, --  // (N) Endereço de e-mail
+--NMWEBSITE            --  // (N) Endereço do Web Site
+10 AS OPESTCIVIL, --  // (O) Estado Civil
+'CENTRO' AS NMBAIRCAD, --  // (O) Bairro
+4125753 AS IDMUNCAD, --  // (O) Identificador do Cadastro de Município
+--NRINSCMUN            --  // (N) Número da Inscrição Municipal
+7 AS OPPESTPSEX, --  // (O) Identificador do Sexo da Pessoa
+--DTCADASTRO           --  // (O) Data do Cadastro da Pessoa
+--IDUSUARIO            --  // (O) Código do Usuário que Cadastrou a Pessoa
+COALESCE(FAB_DATA_CADASTRO,'1899-12-31') AS DTNASCFUND, --  // (O) Data de Nascimento da Pessoa Física / Data de Fundação da Pessoa Jurídica
+--IDPESGRP             --  // (N) Identificador do cadastro de grupo de pessoas, utilizado para agrupar as pessoas que fazem parte de um gr
+'' AS NRFONCEL, --  // (N) Número do telefone celular da pessoa
+'' AS NRFONCOM, --  // (N) Número do telefone comercial
+'' AS NRFONRES, --  // (N) Número do telefone residencial da pessoa
+--DSPRFPES             --  // (N) Profissão da pessoa - utilizado apenas para pessoa física
+--NRCRTTRA             --  // (N) Número da carteira de trabalho
+1 AS IDAPONAC, --  // (O) Identificador do cadastro de nacionalidades
+--DTALTERACAO          --  // (O) Data e hora da alteração do registro
+720 AS OPTPOINE, --  // (O) Determina o tipo de inscrição estadual das pessoas do tipo jurídica
+'' AS NMPESMAE, --  // (N) Nome da mãe quando a pessoa for física
+'' AS NMPESPAI, --  // (N) Nome do pai quando a pessoa for física
+(SELECT FIRST 1 EMP_CODIGO FROM empresa) AS IDEMPCAD --  // (O) Identificador do cadastro de empresa que cadastrou a pessoa
+FROM fabricantes 

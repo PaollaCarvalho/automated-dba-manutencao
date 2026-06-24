@@ -1,0 +1,19 @@
+-- TEMPO DE EXECUÇÃO DE QUERYS, ULTIMAS 100 QUERYS RODADAS
+
+SELECT TOP 100
+    qs.last_execution_time,
+    qs.execution_count,
+    qs.total_worker_time / qs.execution_count AS AvgCPU,
+    qs.total_elapsed_time / qs.execution_count AS AvgDuration,
+    qs.total_logical_reads / qs.execution_count AS AvgReads,
+    SUBSTRING(qt.text, 
+        qs.statement_start_offset/2,
+        (CASE 
+            WHEN qs.statement_end_offset = -1 
+            THEN LEN(CONVERT(NVARCHAR(MAX), qt.text)) * 2
+            ELSE qs.statement_end_offset 
+        END - qs.statement_start_offset)/2) AS QueryText
+FROM sys.dm_exec_query_stats qs
+CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) qt
+-- WHERE qt.text LIKE '%TBPRD003PRD%' -- SELECIONAR TABELA 
+ORDER BY qs.last_execution_time DESC;

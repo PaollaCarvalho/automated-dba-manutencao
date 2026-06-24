@@ -1,0 +1,10 @@
+SELECT  
+	OBJECT_NAME(ps.object_id) Tabela,
+	i.name ,
+	ps.avg_fragmentation_in_percent,
+	ps.page_count
+FROM sys.dm_db_index_physical_stats(DB_ID(), NULL, NULL, NULL, 'LIMITED') ps
+JOIN sys.indexes i ON ps.object_id = i.object_id AND ps.index_id = i.index_id
+WHERE avg_fragmentation_in_percent > 5 AND ps.page_count > 350
+--and OBJECT_NAME(ps.object_id) = 'TBPRD001TNI' -- caso quiser de uma tabela especifica
+ORDER BY avg_fragmentation_in_percent DESC; 

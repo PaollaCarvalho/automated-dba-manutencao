@@ -1,0 +1,52 @@
+ManuComo criar um JOB (atividade programada) no SQL server
+
+
+1️⃣ Verifique se o SQL Server Agent está ativo
+
+No Object Explorer: SQL Server Agent
+
+Se estiver com um ícone vermelho, clique com botão direito: Start
+
+
+2️⃣ Criar o Job
+Caminho:
+SQL Server Agent
+   Jobs
+      New Job...
+
+Preencha: Name
+
+
+3️⃣ Criar o Step (o que o Job executa)
+Caminho:
+Steps
+ New
+
+Preencha:
+Step name: job
+Type: Transact-SQL script (T-SQL)
+Database: Escolha o banco onde está a procedure.
+Command: EXEC dbo.stpAtualiza_Indices_Moderno
+
+Clique OK.
+
+4️⃣ Criar o Schedule (horário)
+Caminho:
+Schedules
+  New
+
+Configure a frequencia, recorrencia o horário de inicio etc
+
+5️⃣ Salvar
+Clique OK no Job.
+
+Agora ele aparece em:
+SQL Server Agent
+   Jobs
+
+6️⃣ Testar manualmente
+Antes de deixar automático, teste:
+Clique com botão direito no Job: Start Job at Step...
+
+Você verá o histórico depois em:
+View History

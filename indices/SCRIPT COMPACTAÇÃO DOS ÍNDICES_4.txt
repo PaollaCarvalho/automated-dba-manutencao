@@ -1,0 +1,8 @@
+SCRIPT EXECUTAR COMPACTAÇÃO DOS ÍNDICES.
+
+EXEC dbo.stpCompacta_Database
+    @Ds_Database = 'NOME DO BANCO',
+    @Fl_Rodar_Shrink = 0, 
+    @Fl_Parar_Se_Falhar = 0, 
+    @Fl_Exibe_Comparacao_Tamanho = 1,
+    @Fl_Metodo_Compressao_Page = 1 -- 1 POR PÁGINA, 0 POR LINHA, RECOMENDADO PÁGINA

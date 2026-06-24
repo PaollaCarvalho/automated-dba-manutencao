@@ -1,0 +1,27 @@
+-- tabelas com + de 5000 linhas
+SELECT
+      o.name
+    , s.name
+    , sp.rows
+    , sp.modification_counter
+    , CAST(sp.modification_counter * 100.0 / sp.rows AS DECIMAL(10,2)) Percentual
+FROM sys.stats s
+INNER JOIN sys.objects o
+    ON o.object_id = s.object_id
+CROSS APPLY sys.dm_db_stats_properties(s.object_id, s.stats_id) sp
+WHERE o.type = 'U' AND sp.rows > 5000
+ORDER BY Percentual DESC;
+
+
+
+-- Verificar quantidade de modificações de linhas desde a última atualização: 
+
+SELECT
+    OBJECT_NAME(s.object_id) AS Tabela,
+    s.name AS Estatistica,
+    sp.last_updated,
+    sp.rows,
+    sp.modification_counter
+FROM sys.stats s
+CROSS APPLY sys.dm_db_stats_properties(s.object_id, s.stats_id) sp
+ORDER BY sp.modification_counter DESC;
